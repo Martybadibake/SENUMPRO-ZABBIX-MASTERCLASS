@@ -11,7 +11,7 @@ Environnement : VMware – laboratoire virtualisé
 Agents : Zabbix Agent 2 pour Linux et Windows Server 2025
 Déploiement : Installation native, sans Docker
 
-1. Présentation du projet
+1.Présentation du projet
 
 1.1 Contexte
 
