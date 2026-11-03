@@ -442,6 +442,70 @@ La disponibilité de l'agent est vérifiable dans la liste des hôtes. Une icôn
 
 <img width="1737" height="721" alt="02-03-hotes-supervises-dans-zabbix png" src="https://github.com/user-attachments/assets/57c6bf8f-160a-443c-a73b-821716686a23" />
 
+4.4 Installation de l'agent sur Ubuntu
+
+Le serveur Zabbix utilise également Zabbix Agent 2 pour surveiller son propre fonctionnement.
+
+Le fichier de configuration principal est :
+
+sudo nano /etc/zabbix/zabbix_agent2.conf
+
+Les paramètres essentiels sont :
+
+Server=127.0.0.1,ADRESSE_SERVEUR_ZABBIX
+ServerActive=127.0.0.1
+Hostname=zbx-srv01
+
+Après modification :
+
+sudo systemctl restart zabbix-agent2
+sudo systemctl status zabbix-agent2
+
+La communication peut être testée avec l'utilitaire zabbix_get :
+
+zabbix_get -s ADRESSE_AGENT -p 10050 -k agent.ping
+
+Une réponse égale à 1 confirme que l'agent répond correctement à cette vérification.
+
+Dans le laboratoire, le serveur Ubuntu est supervisé avec le modèle Linux by Zabbix agent.
+
+5. Administration des hôtes et organisation de la supervision
+
+5.1 Groupes d'hôtes
+
+Les groupes d'hôtes permettent d'organiser les systèmes selon leur fonction ou leur environnement.
+
+Dans une infrastructure d'entreprise, il est préférable de séparer les serveurs Linux, les serveurs Windows, les équipements réseau et les systèmes de supervision.
+
+Cette organisation facilite la gestion des permissions, des modèles, des actions et des rapports.
+
+Dans le laboratoire, les groupes utilisés comprennent notamment :
+
+Linux servers.
+
+Virtual machines.
+
+Zabbix servers.
+
+La création de groupes supplémentaires doit suivre l'évolution réelle de l'infrastructure.
+
+5.2 Modèles de supervision
+
+Un modèle regroupe les éléments de collecte, les déclencheurs et les graphiques associés à un type de système.
+
+Il permet d'appliquer une configuration cohérente à plusieurs hôtes sans devoir recréer chaque élément individuellement.
+
+Le laboratoire utilise les modèles standards suivants :
+
+Linux by Zabbix agent
+
+Windows by Zabbix agent
+
+Ces modèles fournissent les éléments nécessaires à la surveillance des ressources principales des systèmes.
+
+Pour aller plus loin, l'administrateur peut créer un modèle personnalisé regroupant les paramètres propres à son organisation. Il est recommandé de cloner un modèle officiel avant de le modifier.
+
+
 
 
 
