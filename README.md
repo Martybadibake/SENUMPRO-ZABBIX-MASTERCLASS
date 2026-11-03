@@ -13,7 +13,8 @@ Déploiement : Installation native, sans Docker
 
 1. Présentation du projet
 
-1.1 Contexte
+
+  1.1 Contexte
 
 Dans une infrastructure informatique, la disponibilité des serveurs, des services et des équipements réseau est essentielle au bon fonctionnement des activités. Une interruption de service, une saturation du stockage ou une dégradation des performances peut avoir des conséquences importantes pour les utilisateurs et pour l'organisation.
 
@@ -25,7 +26,7 @@ Le laboratoire permet de superviser un serveur Linux et un serveur Windows, de c
 
 L'objectif n'est pas uniquement d'installer un logiciel de supervision. Il s'agit également de comprendre son fonctionnement, d'administrer les hôtes, d'interpréter les données collectées et de suivre les incidents jusqu'à leur résolution.
 
-1.2 Objectifs techniques
+  1.2 Objectifs techniques
 
 Le projet poursuit plusieurs objectifs :
 
