@@ -515,7 +515,70 @@ Ces modèles fournissent les éléments nécessaires à la surveillance des ress
 Pour aller plus loin, l'administrateur peut créer un modèle personnalisé regroupant les paramètres propres à son organisation. Il est recommandé de cloner un modèle officiel avant de le modifier.
 
 
+5.3 Utilisateurs, rôles et permissions
 
+Dans une installation destinée à plusieurs administrateurs, les droits d'accès doivent être organisés selon les responsabilités.
 
+Le rôle détermine les opérations autorisées dans l'interface. Les permissions sur les groupes d'hôtes déterminent les données que l'utilisateur peut consulter ou modifier.
+
+Une organisation simple peut prévoir un administrateur de la plateforme, un technicien de support en lecture seule et un responsable disposant d'une vue sur les indicateurs de disponibilité.
+
+La procédure consiste à créer les groupes d'utilisateurs, définir les rôles, attribuer les permissions sur les groupes d'hôtes et vérifier les accès en ouvrant une session avec chaque profil.
+
+Cette configuration est une procédure recommandée pour une extension multiutilisateur du laboratoire ; elle n'est pas présentée ici comme une réalisation validée par capture.
+
+5.4 Sécurisation des communications
+
+En production, les communications entre les agents et le serveur doivent être protégées.
+
+Zabbix permet notamment d'utiliser une clé prépartagée, appelée PSK, ou des certificats.
+
+Pour une configuration PSK, il faut générer une clé aléatoire, la déployer sur l'agent et renseigner la même identité et la même clé dans la configuration de l'hôte Zabbix.
+
+Les paramètres principaux sont :
+
+TLSConnect=psk
+
+TLSAccept=psk
+
+TLSPSKIdentity=IDENTITE_PSK
+
+TLSPSKFile=CHEMIN_VERS_LA_CLE
+
+La clé doit être protégée par des permissions strictes. Elle ne doit jamais être ajoutée au dépôt GitHub.
+
+Le chiffrement PSK est une extension recommandée pour ce laboratoire. Les captures actuelles ne démontrent pas son activation.
+
+6.Découverte automatique du réseau
+
+6.1 Principe de la découverte réseau
+
+La découverte réseau permet à Zabbix d'identifier les équipements présents sur une plage d'adresses IP.
+
+Le serveur effectue différents contrôles selon les paramètres définis dans la règle : disponibilité ICMP, présence d'un agent Zabbix ou réponse d'un service particulier.
+
+Cette fonction facilite la reconnaissance d'un réseau et permet de repérer les équipements qui pourraient nécessiter une supervision.
+
+Il faut cependant distinguer la découverte d'un équipement de son intégration complète. Un équipement détecté n'est pas automatiquement un hôte supervisé avec un ensemble d'éléments et de déclencheurs.
+
+6.2 Création de la règle de découverte
+
+Dans le menu Collecte de données, puis Découverte, une règle peut être créée avec un nom explicite.
+
+Dans le laboratoire, la règle porte le nom :
+
+DISCOVERY-LAN
+
+La plage d'adresses correspond au réseau local du laboratoire. Elle est volontairement masquée dans la documentation publique.
+
+L'intervalle de vérification est défini à cinq minutes.
+
+Les contrôles configurés comprennent :
+
+Ping ICMP.
+
+Vérification de la présence d'un agent Zabbix.
+
+La règle doit être activée pour que les contrôles soient exécutés périodiquement.
 
 
