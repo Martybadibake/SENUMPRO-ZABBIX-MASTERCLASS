@@ -231,6 +231,33 @@ php8.3-mysql
 
 Cette installation fournit les services nécessaires au fonctionnement de la plateforme.
 
+3.5 Préparation de la base MariaDB
 
+Zabbix utilise une base de données pour conserver sa configuration et les informations collectées.
+
+La base doit être créée avec un encodage compatible avec les exigences de Zabbix. Un compte dédié doit être utilisé pour les connexions du serveur de supervision.
+
+Exemple de procédure pour une nouvelle installation :
+
+CREATE DATABASE zabbix
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_bin;
+
+CREATE USER 'zabbix'@'localhost'
+IDENTIFIED BY 'REMPLACER_PAR_UN_MOT_DE_PASSE_FORT';
+
+GRANT ALL PRIVILEGES ON zabbix.*
+TO 'zabbix'@'localhost';
+
+FLUSH PRIVILEGES;
+
+Le schéma initial de Zabbix est ensuite importé à partir du fichier SQL fourni par le paquet officiel :
+
+zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz |
+sudo mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
+
+Cette procédure concerne une base neuve. Elle ne doit pas être exécutée une seconde fois sur une base déjà initialisée.
+
+Dans un environnement existant, il faut d'abord vérifier l'état de la base et consulter les journaux avant toute opération de modification.
 
 
