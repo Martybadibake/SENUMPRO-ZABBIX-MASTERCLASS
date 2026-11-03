@@ -161,6 +161,33 @@ Cette vérification permet de confirmer que les composants attendus sont install
 
 <img width="1470" height="521" alt="01-01-versions-ubuntu-zabbix-mariadb-nginx-php png" src="https://github.com/user-attachments/assets/3a64b6d3-8cb5-412f-89b9-09183ca6bffe" />
 
+3. Installation et configuration du serveur Zabbix
+
+3.1 Préparation d'Ubuntu Server
+
+La première étape consiste à préparer le système d'exploitation.
+
+Il faut commencer par mettre à jour les dépôts et les paquets :
+
+sudo apt update
+
+sudo apt upgrade -y
+
+Le nom de la machine doit être défini avant de poursuivre :
+
+sudo hostnamectl set-hostname zbx-srv01
+
+Le fuseau horaire doit également être configuré pour assurer la cohérence des horodatages des événements et des graphiques.
+
+sudo timedatectl set-timezone America/Toronto
+timedatectl status
+
+Une synchronisation correcte de l'heure est importante dans une infrastructure de supervision. Un décalage horaire peut compliquer l'analyse des événements et la corrélation des journaux.
+
+
+
+
+
 
 
 
