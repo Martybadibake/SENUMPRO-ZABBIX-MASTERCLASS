@@ -128,11 +128,17 @@ Avant d'installer une plateforme de supervision, il est nécessaire de vérifier
 Les commandes suivantes permettent de récupérer les informations essentielles :
 
 hostnamectl
+
 lsb_release -a
+
 uname -r
+
 ip -br address
+
 free -h
+
 df -h
+
 uptime
 
 Elles permettent notamment de vérifier le nom du serveur, la version d'Ubuntu, le noyau, les interfaces réseau, la mémoire disponible, l'espace disque et la durée de fonctionnement.
