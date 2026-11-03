@@ -337,5 +337,83 @@ Dans le laboratoire, les services Zabbix Server, MariaDB et Nginx ont été vér
 
 <img width="1460" height="718" alt="01-04-etat-des-services-nginx-et-mariadb png" src="https://github.com/user-attachments/assets/3d17c0f3-9baf-4d72-a6f5-4a84ac0bedd6" />
 
+3.9 Accès à l'interface Web
+
+Après le démarrage des services, l'interface Web est accessible depuis un navigateur à l'adresse du serveur.
+
+L'assistant d'installation permet de vérifier les prérequis PHP, les paramètres de connexion à la base de données et les informations générales du serveur.
+
+Une fois la configuration terminée, l'administrateur accède à la console Zabbix.
+
+Le compte administrateur initial doit être sécurisé immédiatement. Il est recommandé de créer un compte nominatif et de limiter l'utilisation du compte d'administration général.
+
+3.10 Sécurisation de l'accès Web
+
+Pour protéger les communications avec l'interface Web, HTTPS doit être configuré.
+
+Dans un laboratoire privé, un certificat auto-signé peut être utilisé. Il permet de chiffrer les communications, mais les navigateurs affichent généralement un avertissement tant que le certificat n'est pas approuvé.
+
+Dans un environnement de production, il est préférable d'utiliser un certificat émis par une autorité de certification reconnue.
+
+La configuration doit également protéger la clé privée et limiter l'accès réseau à l'interface d'administration.
+
+
+4.Installation et intégration des agents
+
+4.1 Rôle de Zabbix Agent 2
+
+Zabbix Agent 2 est installé sur les machines que l'on souhaite superviser.
+
+Il collecte les informations relatives au système d'exploitation, au processeur, à la mémoire, aux disques, aux interfaces réseau et à différents services.
+
+L'agent communique avec le serveur Zabbix selon deux modes.
+
+En mode passif, le serveur interroge directement l'agent. Le port TCP 10050 doit être accessible depuis le serveur de supervision.
+
+En mode actif, l'agent contacte le serveur et lui transmet les données. La communication utilise le port TCP 10051 côté serveur.
+
+Le choix du mode dépend de la topologie réseau, des règles de pare-feu et des contraintes de sécurité.
+
+4.2 Installation de l'agent sur Windows Server 2025
+
+L'agent Windows est distribué sous forme de paquet MSI.
+
+La procédure consiste à télécharger la version correspondant à l'architecture du serveur, à exécuter l'installation et à renseigner les paramètres de communication.
+
+Les principaux paramètres sont :
+
+Server=ADRESSE_SERVEUR_ZABBIX
+
+ServerActive=ADRESSE_SERVEUR_ZABBIX
+
+Hostname=SRV-DC01
+
+Le nom Hostname doit correspondre exactement au nom technique de l'hôte déclaré dans l'interface Zabbix.
+
+Le service Windows doit ensuite être vérifié.
+
+Dans PowerShell administrateur :
+
+Get-Service "Zabbix Agent 2"
+
+Si le service est arrêté :
+
+Start-Service "Zabbix Agent 2"
+
+Le pare-feu Windows doit autoriser les connexions entrantes sur le port TCP 10050 lorsque le mode passif est utilisé. Il est recommandé de limiter cette règle à l'adresse du serveur Zabbix.
+
+Exemple :
+
+New-NetFirewallRule `
+-DisplayName "Zabbix Agent 10050" `
+-Direction Inbound `
+-Protocol TCP `
+-LocalPort 10050 `
+-Action Allow `
+-RemoteAddress ADRESSE_SERVEUR_ZABBIX
+
+Dans ce laboratoire, Zabbix Agent 2 version 7.0.32 a été installé sur Windows Server 2025. Le service a été démarré et la communication avec le serveur a été vérifiée.
+
+<img width="1028" height="194" alt="02-01-installation-agent2-windows-server png" src="https://github.com/user-attachments/assets/31c180c9-bb40-48fc-9591-0a90e4ef6a63" />
 
 
