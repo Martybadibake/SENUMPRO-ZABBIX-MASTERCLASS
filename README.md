@@ -581,4 +581,4 @@ Vérification de la présence d'un agent Zabbix.
 
 La règle doit être activée pour que les contrôles soient exécutés périodiquement.
 
-
+<img width="1919" height="631" alt="03-01-creation-regle-decouverte-reseau png" src="https://github.com/user-attachments/assets/ac3dd349-1423-4123-a2ef-361155ae994b" />
