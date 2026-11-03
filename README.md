@@ -306,6 +306,36 @@ sudo nginx -t
 
 Une configuration incorrecte doit être corrigée avant le redémarrage du service.
 
+3.8 Démarrage des services
+
+Une fois les composants installés et configurés, les services doivent être démarrés et activés au démarrage du système.
+
+sudo systemctl restart mariadb
+sudo systemctl restart zabbix-server
+sudo systemctl restart zabbix-agent2
+sudo systemctl restart nginx
+sudo systemctl restart php8.3-fpm
+
+Activation au démarrage :
+
+sudo systemctl enable mariadb
+sudo systemctl enable zabbix-server
+sudo systemctl enable zabbix-agent2
+sudo systemctl enable nginx
+sudo systemctl enable php8.3-fpm
+
+Le contrôle de l'état des services permet de confirmer leur fonctionnement :
+
+sudo systemctl status zabbix-server
+sudo systemctl status mariadb
+sudo systemctl status nginx
+sudo systemctl status php8.3-fpm
+
+Dans le laboratoire, les services Zabbix Server, MariaDB et Nginx ont été vérifiés comme actifs.
+
+<img width="1452" height="741" alt="01-03-etat-du-service-zabbix-server png" src="https://github.com/user-attachments/assets/38e60919-71a2-40a8-b58e-edce62d664dd" />
+
+<img width="1460" height="718" alt="01-04-etat-des-services-nginx-et-mariadb png" src="https://github.com/user-attachments/assets/3d17c0f3-9baf-4d72-a6f5-4a84ac0bedd6" />
 
 
 
