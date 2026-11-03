@@ -77,7 +77,7 @@ Les adresses réseau ne sont pas publiées dans cette documentation.
 
 Le laboratoire constitue également une base de travail pour approfondir la supervision SNMP, les notifications, les modèles personnalisés, les SLA et la supervision distribuée.
 
-2. Architecture logicielle et environnement
+2.Architecture logicielle et environnement
 
 2.1 Composants installés
 
