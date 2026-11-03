@@ -145,8 +145,21 @@ Elles permettent notamment de vérifier le nom du serveur, la version d'Ubuntu, 
 
 <img width="1383" height="627" alt="01-02-informations-systeme-et-ressources-ubuntu png" src="https://github.com/user-attachments/assets/5312b5fe-9fc9-4b15-8cef-1734b818e95f" />
 
+2.4 Vérification des versions logicielles
 
+Les versions des principaux composants peuvent être contrôlées avec les commandes suivantes :
 
+zabbix_server --version
+
+mariadb --version
+
+nginx -v
+
+php -v
+
+Cette vérification permet de confirmer que les composants attendus sont installés et de faciliter le diagnostic lorsqu'une incompatibilité de version est suspectée.
+
+<img width="1470" height="521" alt="01-01-versions-ubuntu-zabbix-mariadb-nginx-php png" src="https://github.com/user-attachments/assets/3a64b6d3-8cb5-412f-89b9-09183ca6bffe" />
 
 
 
