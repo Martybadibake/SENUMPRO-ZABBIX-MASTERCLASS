@@ -416,4 +416,33 @@ Dans ce laboratoire, Zabbix Agent 2 version 7.0.32 a été installé sur Windows
 
 <img width="1028" height="194" alt="02-01-installation-agent2-windows-server png" src="https://github.com/user-attachments/assets/31c180c9-bb40-48fc-9591-0a90e4ef6a63" />
 
+4.3 Déclaration de l'hôte Windows dans Zabbix
+
+Après l'installation de l'agent, l'hôte doit être déclaré dans l'interface Web.
+
+Dans le menu Collecte de données, puis Hôtes, il faut créer un nouvel hôte et renseigner son nom technique.
+
+Les informations utilisées dans le laboratoire sont :
+
+Nom technique : SRV-DC01.
+
+Nom visible : Windows Server 2025 - DC01.
+
+Groupe : Virtual machines.
+
+Modèle : Windows by Zabbix agent.
+
+Interface : adresse du serveur Windows et port 10050.
+
+Une fois l'hôte créé, Zabbix commence à collecter les informations prévues par le modèle associé.
+
+La disponibilité de l'agent est vérifiable dans la liste des hôtes. Une icône ZBX verte indique que la communication avec l'agent est opérationnelle.
+
+<img width="1110" height="621" alt="02-02-configuration-hote-windows-server-2025 png" src="https://github.com/user-attachments/assets/184a1662-f18f-4451-aad7-5505addbdb69" />
+
+<img width="1737" height="721" alt="02-03-hotes-supervises-dans-zabbix png" src="https://github.com/user-attachments/assets/57c6bf8f-160a-443c-a73b-821716686a23" />
+
+
+
+
 
