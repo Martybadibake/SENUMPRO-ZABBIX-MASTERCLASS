@@ -161,7 +161,7 @@ Cette vérification permet de confirmer que les composants attendus sont install
 
 <img width="1470" height="521" alt="01-01-versions-ubuntu-zabbix-mariadb-nginx-php png" src="https://github.com/user-attachments/assets/3a64b6d3-8cb5-412f-89b9-09183ca6bffe" />
 
-3. Installation et configuration du serveur Zabbix
+3.Installation et configuration du serveur Zabbix
 
 3.1 Préparation d'Ubuntu Server
 
@@ -185,9 +185,51 @@ timedatectl status
 Une synchronisation correcte de l'heure est importante dans une infrastructure de supervision. Un décalage horaire peut compliquer l'analyse des événements et la corrélation des journaux.
 
 
+3.2 Installation des dépendances
 
+Les outils nécessaires à l'administration du système sont installés avant le déploiement :
 
+sudo apt install -y curl wget ca-certificates chrony
 
+La synchronisation de l'heure peut être vérifiée avec :
+
+timedatectl status
+
+L'administrateur doit s'assurer que l'horloge du système est synchronisée.
+
+3.3 Installation du dépôt officiel Zabbix
+
+Pour installer Zabbix, il est préférable d'utiliser les paquets du dépôt officiel correspondant à la version et à la distribution choisies.
+
+La procédure générale consiste à télécharger le paquet de configuration du dépôt, à l'installer, puis à actualiser la liste des paquets.
+
+Exemple pour Ubuntu 24.04 et Zabbix 7.0 :
+
+wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest+ubuntu24.04_all.deb
+
+sudo dpkg -i zabbix-release_latest+ubuntu24.04_all.deb
+
+sudo apt update
+
+N.B La version du dépôt doit être vérifiée avant toute installation afin d'éviter de mélanger plusieurs branches de Zabbix.
+
+3.4 Installation des composants
+
+Le laboratoire utilise MariaDB comme moteur de base de données, Nginx comme serveur Web et PHP-FPM pour l'interface.
+
+Les composants Zabbix nécessaires sont installés à l'aide du gestionnaire de paquets :
+
+sudo apt install -y mariadb-server
+
+sudo apt install -y \
+zabbix-server-mysql \
+zabbix-frontend-php \
+zabbix-nginx-conf \
+zabbix-sql-scripts \
+zabbix-agent2 \
+php8.3-mysql
+
+Cette installation fournit les services nécessaires au fonctionnement de la plateforme.
 
 
 
