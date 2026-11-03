@@ -266,3 +266,46 @@ Cette procédure concerne une base neuve. Elle ne doit pas être exécutée une 
 Dans un environnement existant, il faut d'abord vérifier l'état de la base et consulter les journaux avant toute opération de modification.
 
 
+3.6 Configuration du serveur Zabbix
+
+Le fichier principal de configuration du serveur est :
+
+sudo nano /etc/zabbix/zabbix_server.conf
+
+Les paramètres de connexion à la base doivent correspondre aux informations réellement créées dans MariaDB.
+
+DBHost=localhost
+
+DBName=zabbix
+
+DBUser=zabbix
+
+DBPassword=REMPLACER_PAR_LE_MOT_DE_PASSE_CONFIGURE
+
+Le fichier contient des informations sensibles et doit conserver des permissions adaptées.
+
+3.7 Configuration de Nginx et PHP-FPM
+
+L'interface Web de Zabbix est publiée par Nginx.
+
+Le fichier de configuration utilisé est notamment :
+
+sudo nano /etc/zabbix/nginx.conf
+
+Le nom DNS ou le nom de serveur doit être adapté à l'environnement. Le fuseau horaire doit également être défini dans la configuration PHP-FPM.
+
+sudo nano /etc/zabbix/php-fpm.conf
+
+Paramètre :
+
+php_value[date.timezone] = America/Toronto
+
+Avant de recharger le service, il faut contrôler la syntaxe de la configuration Nginx :
+
+sudo nginx -t
+
+Une configuration incorrecte doit être corrigée avant le redémarrage du service.
+
+
+
+
