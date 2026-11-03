@@ -120,3 +120,23 @@ PHP : 8.3.6.
 Fuseau horaire : America/Toronto.
 
 Les versions correspondent aux informations relevées dans le laboratoire au moment de la documentation. Elles peuvent différer lors d'une nouvelle installation ou d'une mise à jour.
+
+2.3 Vérification du système
+
+Avant d'installer une plateforme de supervision, il est nécessaire de vérifier les caractéristiques du système et les ressources disponibles.
+
+Les commandes suivantes permettent de récupérer les informations essentielles :
+
+hostnamectl
+lsb_release -a
+uname -r
+ip -br address
+free -h
+df -h
+uptime
+Elles permettent notamment de vérifier le nom du serveur, la version d'Ubuntu, le noyau, les interfaces réseau, la mémoire disponible, l'espace disque et la durée de fonctionnement.
+
+
+
+
+
