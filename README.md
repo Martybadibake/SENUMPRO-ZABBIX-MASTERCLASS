@@ -134,6 +134,7 @@ ip -br address
 free -h
 df -h
 uptime
+
 Elles permettent notamment de vérifier le nom du serveur, la version d'Ubuntu, le noyau, les interfaces réseau, la mémoire disponible, l'espace disque et la durée de fonctionnement.
 <img width="1470" height="521" alt="01-01-versions-ubuntu-zabbix-mariadb-nginx-php png" src="https://github.com/user-attachments/assets/06f55ed4-2fa9-4d3f-8cc6-76982f8c568e" />
 
