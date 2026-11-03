@@ -405,12 +405,18 @@ Le pare-feu Windows doit autoriser les connexions entrantes sur le port TCP 1005
 Exemple :
 
 New-NetFirewallRule `
--DisplayName "Zabbix Agent 10050" `
--Direction Inbound `
--Protocol TCP `
--LocalPort 10050 `
--Action Allow `
--RemoteAddress ADRESSE_SERVEUR_ZABBIX
+
+DisplayName "Zabbix Agent 10050" `
+
+Direction Inbound `
+
+Protocol TCP `
+
+LocalPort 10050 `
+
+Action Allow `
+
+RemoteAddress ADRESSE_SERVEUR_ZABBIX
 
 Dans ce laboratoire, Zabbix Agent 2 version 7.0.32 a été installé sur Windows Server 2025. Le service a été démarré et la communication avec le serveur a été vérifiée.
 
@@ -453,12 +459,15 @@ sudo nano /etc/zabbix/zabbix_agent2.conf
 Les paramètres essentiels sont :
 
 Server=127.0.0.1,ADRESSE_SERVEUR_ZABBIX
+
 ServerActive=127.0.0.1
+
 Hostname=zbx-srv01
 
 Après modification :
 
 sudo systemctl restart zabbix-agent2
+
 sudo systemctl status zabbix-agent2
 
 La communication peut être testée avec l'utilitaire zabbix_get :
