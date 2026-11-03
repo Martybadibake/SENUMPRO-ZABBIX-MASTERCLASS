@@ -240,13 +240,17 @@ La base doit être créée avec un encodage compatible avec les exigences de Zab
 Exemple de procédure pour une nouvelle installation :
 
 CREATE DATABASE zabbix
+
 CHARACTER SET utf8mb4
+
 COLLATE utf8mb4_bin;
 
 CREATE USER 'zabbix'@'localhost'
+
 IDENTIFIED BY 'REMPLACER_PAR_UN_MOT_DE_PASSE_FORT';
 
 GRANT ALL PRIVILEGES ON zabbix.*
+
 TO 'zabbix'@'localhost';
 
 FLUSH PRIVILEGES;
@@ -254,6 +258,7 @@ FLUSH PRIVILEGES;
 Le schéma initial de Zabbix est ensuite importé à partir du fichier SQL fourni par le paquet officiel :
 
 zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz |
+
 sudo mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
 
 Cette procédure concerne une base neuve. Elle ne doit pas être exécutée une seconde fois sur une base déjà initialisée.
