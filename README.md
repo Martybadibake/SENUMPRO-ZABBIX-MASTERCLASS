@@ -13,8 +13,8 @@ Déploiement : Installation native, sans Docker
 
 1. Présentation du projet
 
-
-  1.1 Contexte
+1.1 Contexte
+1.1 Contexte
 
 Dans une infrastructure informatique, la disponibilité des serveurs, des services et des équipements réseau est essentielle au bon fonctionnement des activités. Une interruption de service, une saturation du stockage ou une dégradation des performances peut avoir des conséquences importantes pour les utilisateurs et pour l'organisation.
 
