@@ -24,3 +24,27 @@ Ce projet consiste à mettre en place une plateforme de supervision avec Zabbix 
 Le laboratoire permet de superviser un serveur Linux et un serveur Windows, de collecter leurs données, d'observer leurs performances, de découvrir les équipements présents sur le réseau et de suivre les événements générés par Zabbix.
 
 L'objectif n'est pas uniquement d'installer un logiciel de supervision. Il s'agit également de comprendre son fonctionnement, d'administrer les hôtes, d'interpréter les données collectées et de suivre les incidents jusqu'à leur résolution.
+
+1.2 Objectifs techniques
+
+Le projet poursuit plusieurs objectifs :
+
+Installer et configurer un serveur Zabbix sur Ubuntu Server.
+
+Déployer une base de données MariaDB et un serveur Web Nginx.
+
+Installer et configurer Zabbix Agent 2 sur Linux et Windows.
+
+Intégrer les machines dans la console de supervision.
+
+Mettre en place une règle de découverte réseau.
+
+Collecter les données relatives au processeur, à la mémoire, au stockage et au système d'exploitation.
+
+Consulter les graphiques et les tableaux de bord.
+
+Analyser les problèmes détectés par Zabbix.
+
+Vérifier les événements à partir des systèmes concernés.
+
+Comprendre les mécanismes d'administration, de maintenance et de sauvegarde de la plateforme.
