@@ -582,3 +582,115 @@ Vérification de la présence d'un agent Zabbix.
 La règle doit être activée pour que les contrôles soient exécutés périodiquement.
 
 <img width="1919" height="631" alt="03-01-creation-regle-decouverte-reseau png" src="https://github.com/user-attachments/assets/ac3dd349-1423-4123-a2ef-361155ae994b" />
+
+6.3 Analyse des résultats
+
+Après l'activation de la règle, Zabbix présente les équipements détectés et les résultats des contrôles effectués.
+
+Dans le laboratoire, neuf équipements ont été identifiés par la règle de découverte.
+
+Parmi les résultats figurent le serveur Zabbix Ubuntu, le serveur Windows et plusieurs autres équipements du réseau.
+
+Les résultats permettent de distinguer les machines dont l'agent répond de celles qui sont uniquement identifiées par ICMP.
+
+Cette distinction est importante : une réponse au ping confirme une certaine disponibilité réseau, mais ne garantit pas qu'un agent de supervision est installé ou que les métriques système sont accessibles.
+
+<img width="1912" height="875" alt="03-02-resultats-decouverte-equipements-reseau png" src="https://github.com/user-attachments/assets/622e6e40-239a-44bd-9594-1943bc1eaf61" />
+
+6.4 Exploitation de la découverte
+
+Dans un environnement plus avancé, une règle de découverte peut être associée à des actions.
+
+Ces actions peuvent notamment permettre de créer automatiquement un hôte, de l'affecter à un groupe et de lui associer un modèle.
+
+Avant d'activer une automatisation, il faut définir des critères précis afin d'éviter l'intégration d'équipements inconnus ou non autorisés.
+
+La découverte réseau du laboratoire a été utilisée comme démonstration de reconnaissance des équipements. L'auto-enregistrement automatique des nouveaux hôtes constitue une évolution possible, mais n'est pas déclaré comme déployé dans ce projet.
+
+7. Collecte et analyse des données
+
+7.1 Fonctionnement des éléments de collecte
+
+Dans Zabbix, un élément de collecte, appelé item, correspond à une donnée mesurée sur un hôte.
+
+Il possède une clé, un type de données, une méthode de collecte, un intervalle de mise à jour et une durée de conservation.
+
+Les éléments peuvent provenir d'un agent, d'une vérification simple, d'une interface SNMP, d'une requête HTTP ou d'autres méthodes prises en charge.
+
+Les données sont ensuite stockées dans la base afin d'être utilisées par les graphiques, les déclencheurs et les rapports.
+
+7.2 Consultation des dernières données
+
+La rubrique Dernières données permet de consulter les valeurs collectées pour un hôte.
+
+L'administrateur peut filtrer les résultats selon l'hôte, le groupe, le nom de l'élément ou les étiquettes.
+
+Cette fonctionnalité est utile lorsqu'un problème est signalé : elle permet de vérifier si les données remontent correctement et d'observer les dernières valeurs disponibles.
+
+Dans le laboratoire, les dernières données du serveur Ubuntu ont été consultées pour vérifier les éléments associés au système d'exploitation et à l'inventaire des paquets.
+
+<img width="1919" height="966" alt="04-01-filtrage-des-dernieres-donnees png" src="https://github.com/user-attachments/assets/3d0ef2e4-ee3f-438e-bb26-0ad558f6db5c" />
+
+7.3 Configuration d'un élément de collecte
+
+Un élément peut être configuré directement sur un hôte ou hérité d'un modèle.
+
+Sa configuration doit préciser le nom, la clé, le type de collecte, le type d'information et l'intervalle de mise à jour.
+
+Dans le laboratoire, l'élément Number of installed packages utilise la clé :
+
+system.sw.packages.get
+
+Il permet de récupérer le nombre de paquets logiciels installés sur le serveur Linux.
+
+La capture montre également les paramètres de conservation de l'historique et des tendances.
+
+Une attention particulière doit être accordée aux intervalles personnalisés. Une collecte très fréquente n'est pas nécessairement utile pour une donnée qui évolue rarement. Elle peut augmenter inutilement la charge du serveur et le volume de la base de données.
+
+<img width="1199" height="840" alt="04-02-configuration-element-collecte-paquets png" src="https://github.com/user-attachments/assets/e7e622f7-7a9a-4c24-83bf-e4e5d7723bbd" />
+
+7.4 Validation d'un élément
+
+Après la création ou la modification d'un élément, il est nécessaire de vérifier que la requête fonctionne.
+
+Zabbix propose une fonction de test qui permet de vérifier la réponse de l'élément selon son type et sa configuration.
+
+Dans le laboratoire, une requête de test a été exécutée avec succès pour l'élément relatif au nombre de paquets installés.
+
+La validation de la requête confirme que le test a été envoyé avec succès. Il faut également vérifier que la valeur apparaît dans les dernières données et que l'élément reste pris en charge.
+
+<img width="1155" height="845" alt="04-03-validation-requete-element-zabbix png" src="https://github.com/user-attachments/assets/5434e1ca-2fd6-4d71-97f0-f7827d938977" />
+
+7.5 Surveillance de l'espace disque
+
+L'espace disque constitue un indicateur essentiel pour prévenir les interruptions de service.
+
+Une partition saturée peut empêcher l'écriture de journaux, perturber les applications et provoquer des dysfonctionnements du système.
+
+Le modèle Linux fournit des éléments relatifs à la capacité totale, à l'espace utilisé et à l'espace disponible des systèmes de fichiers.
+
+Les données peuvent être consultées sous forme de valeurs et de graphiques.
+
+Dans le laboratoire, les graphiques de l'espace disque et de la partition de démarrage ont été consultés.
+
+L'analyse doit porter sur l'évolution de l'espace disponible, et non uniquement sur une valeur ponctuelle.
+
+<img width="1910" height="957" alt="04-04-surveillance-espace-disque-linux png" src="https://github.com/user-attachments/assets/13a772d0-8a8f-4194-9cc9-e8e6c7b1c049" />
+
+7.6 Surveillance du processeur et de la mémoire
+
+La surveillance des ressources permet de détecter les situations de surcharge.
+
+Pour le processeur, les principaux indicateurs comprennent l'utilisation CPU et la charge système.
+
+Pour la mémoire, il faut observer la mémoire totale, la mémoire utilisée, la mémoire disponible et l'utilisation du swap.
+
+Dans le laboratoire, les tableaux de bord du serveur Ubuntu présentent notamment les graphiques de charge système, d'utilisation CPU, de mémoire et de swap.
+
+Ces informations permettent d'établir un état de référence du serveur et de comparer son comportement dans le temps.
+
+Une utilisation CPU élevée et persistante peut indiquer une surcharge applicative. Une mémoire disponible faible peut nécessiter une analyse des processus et de la consommation mémoire.
+
+<img width="1919" height="990" alt="04-05-surveillance-cpu-memoire-et-charge-linux png" src="https://github.com/user-attachments/assets/28dde53d-754e-428f-bb79-797525d2cbdd" />
+
+
