@@ -693,4 +693,505 @@ Une utilisation CPU élevée et persistante peut indiquer une surcharge applicat
 
 <img width="1919" height="990" alt="04-05-surveillance-cpu-memoire-et-charge-linux png" src="https://github.com/user-attachments/assets/28dde53d-754e-428f-bb79-797525d2cbdd" />
 
+8.Déclencheurs et gestion des incidents
 
+8.1 Principe des déclencheurs
+
+Un déclencheur, ou trigger, est une expression logique évaluée à partir des données collectées.
+
+Lorsqu'une condition est remplie, Zabbix génère un événement et peut ouvrir un problème.
+
+La sévérité permet de distinguer les événements selon leur importance : information, avertissement, moyen, haut ou désastre.
+
+Les déclencheurs doivent être configurés avec des seuils cohérents et des périodes d'observation adaptées.
+
+Un seuil trop sensible peut générer des alertes inutiles. À l'inverse, un seuil trop permissif peut retarder la détection d'un incident.
+
+8.2 Exemples de déclencheurs
+
+Pour surveiller le processeur, un seuil peut être défini à partir d'une moyenne sur plusieurs minutes.
+
+Exemple conceptuel :
+
+avg(/NOM_HOTE/system.cpu.util,5m)>90
+
+Pour surveiller l'espace libre d'un système de fichiers :
+
+last(/NOM_HOTE/vfs.fs.size[/,pfree])<10
+
+Pour détecter l'absence de données :
+
+nodata(/NOM_HOTE/agent.ping,5m)=1
+
+Ces expressions sont des exemples à adapter aux noms d'hôtes, aux éléments disponibles et à la version utilisée. Elles ne sont pas présentées comme des déclencheurs personnalisés effectivement déployés dans le laboratoire.
+
+8.3 Détection des événements Windows
+
+La plateforme a permis d'identifier des événements concernant deux services Windows :
+
+InventorySvc
+
+AppXSvc
+
+Les événements signalaient que les services concernés n'étaient pas en cours d'exécution alors que leur configuration de démarrage était automatique ou automatique différée.
+
+Zabbix a associé ces événements à une sévérité moyenne.
+
+Cette situation constitue un exemple de surveillance des services Windows à partir du modèle de supervision associé à l'hôte.
+
+<img width="1915" height="755" alt="05-01-detection-problemes-windows-et-linux png" src="https://github.com/user-attachments/assets/6f19dce4-b9e6-44fb-b4a0-7cfac7f7d516" />
+
+8.4 Analyse des événements
+
+Lorsqu'un problème apparaît dans Zabbix, l'administrateur doit examiner le nom de l'hôte, le déclencheur, la sévérité, l'heure de détection et la durée de l'événement.
+
+Il faut ensuite déterminer si le problème est lié à une panne réelle, à une configuration particulière du système ou à une condition temporaire.
+
+Dans ce laboratoire, les événements Windows ont été examinés depuis la rubrique Surveillance, puis Problèmes.
+
+L'analyse a permis d'identifier les services concernés et de poursuivre le diagnostic directement sur le serveur Windows.
+
+<img width="1656" height="614" alt="05-02-analyse-des-evenements-zabbix png" src="https://github.com/user-attachments/assets/1b8f0eae-19b1-4a6e-b717-9ea1c937fbee" />
+
+8.5 Vérification sur le serveur Windows
+
+Une alerte de supervision doit être confrontée à l'état réel du système.
+
+Dans le cas de AppXSvc, la console Services Windows permet de consulter le nom du service, sa description, son état et son type de démarrage.
+
+Cette vérification permet de confirmer si le service est actuellement démarré et de mieux comprendre l'événement détecté.
+
+Il ne faut pas arrêter ou modifier un service Windows uniquement parce qu'il apparaît dans Zabbix. Certains services fonctionnent à la demande ou selon des mécanismes de déclenchement spécifiques.
+
+Toute intervention doit être précédée d'une analyse de son rôle et de son impact.
+
+<img width="1616" height="853" alt="05-03-verification-service-windows-appxsvc png" src="https://github.com/user-attachments/assets/3e10cda2-c2c8-4435-94d5-fe65b68b85c6" />
+
+8.6 Suivi de la résolution
+
+Après la vérification, l'administrateur retourne dans Zabbix pour suivre l'évolution du problème.
+
+Un événement peut passer de l'état PROBLÈME à l'état RÉSOLU lorsque la condition du déclencheur n'est plus remplie ou lorsque la récupération est enregistrée.
+
+Dans le laboratoire, les événements relatifs aux services Windows sont ensuite apparus comme résolus.
+
+Les captures documentent le suivi de cette évolution. Elles ne permettent pas, à elles seules, d'attribuer la résolution à une intervention précise.
+<img width="1916" height="894" alt="05-04-suivi-resolution-des-incidents png" src="https://github.com/user-attachments/assets/1e9c6cab-7740-4cc8-9c5d-23b3143f60c6" />
+<img width="1892" height="957" alt="05-05-confirmation-resolution-evenements png" src="https://github.com/user-attachments/assets/988b4da5-19da-49b4-8ec2-727a72f1b1b2" />
+
+8.7 Analyse d'un changement sur le système Linux
+
+Un autre événement a été observé sur le serveur Ubuntu :
+
+Linux: Number of installed packages has been changed
+
+Cet événement indique que le nombre de paquets installés a changé depuis la dernière collecte de référence.
+
+Ce type de détection peut être utile pour suivre les modifications logicielles apportées à un serveur.
+
+Il ne signifie pas nécessairement qu'une panne est survenue. Il peut être déclenché après une installation, une suppression ou une mise à jour de paquets.
+
+Dans une exploitation réelle, il convient de corréler cet événement avec les journaux du gestionnaire de paquets et les opérations de maintenance.
+
+Exemples de commandes de vérification :
+
+grep -i " install " /var/log/dpkg.log
+grep -i " upgrade " /var/log/dpkg.log
+grep -i " remove " /var/log/dpkg.log
+
+Cet événement a été observé dans le laboratoire et doit être présenté comme un changement détecté, non comme une panne résolue.
+
+9.Inventaire des hôtes
+
+9.1 Objectif de l'inventaire
+
+L'inventaire permet de centraliser certaines informations relatives aux machines supervisées.
+
+Selon les éléments configurés et les données disponibles, il peut contenir le système d'exploitation, le matériel, le numéro de série, le nom de l'hôte et des informations de localisation.
+
+Il peut être alimenté manuellement ou automatiquement.
+
+9.2 Consultation de l'inventaire
+
+Dans Zabbix, l'inventaire peut être consulté depuis le menu Inventaire.
+
+Il est possible de filtrer les résultats selon les hôtes, les groupes et les champs disponibles.
+
+Dans le laboratoire, la consultation de l'inventaire permet notamment de retrouver les informations relatives au serveur Ubuntu et à Windows Server.
+
+La capture démontre l'accès à la rubrique d'inventaire et l'affichage des informations disponibles. Elle ne démontre pas que tous les champs matériels sont automatiquement renseignés.
+<img width="1907" height="451" alt="06-01-inventaire-et-filtrage-des-hotes png" src="https://github.com/user-attachments/assets/50f3198e-6fa4-4dde-903b-c0628b4552d6" />
+
+9.3 Automatisation de l'inventaire
+
+Pour aller plus loin, il est possible d'activer le mode d'inventaire automatique sur les hôtes et d'associer certains éléments de collecte aux champs correspondants.
+
+L'administrateur doit vérifier que les données remontées sont fiables et adaptées au champ d'inventaire concerné.
+
+Cette automatisation facilite le suivi du parc informatique et réduit la saisie manuelle.
+
+10. Notifications et actions
+
+10.1 Fonctionnement des notifications
+
+Zabbix peut envoyer des notifications lorsqu'un déclencheur génère un problème.
+
+Le mécanisme repose sur plusieurs composants : les événements, les actions, les opérations, les types de médias et les informations de contact des utilisateurs.
+
+Une notification efficace doit fournir les informations nécessaires à la prise en charge de l'incident : nom de l'hôte, problème, sévérité, date et heure.
+
+10.2 Configuration du courriel
+
+Pour utiliser les notifications par courriel, il faut configurer un type de média SMTP dans l'administration de Zabbix.
+
+La configuration nécessite notamment :
+
+Le serveur SMTP.
+
+Le port de connexion.
+
+Le type de sécurité.
+
+Le compte d'authentification.
+
+Le mot de passe ou mécanisme d'authentification autorisé.
+
+L'adresse d'expédition.
+
+Il faut ensuite associer une adresse électronique à l'utilisateur concerné et tester le type de média.
+
+Les identifiants SMTP doivent être protégés et ne doivent jamais être publiés dans un dépôt de code.
+
+10.3 Création d'une action
+
+Une action permet de définir les conditions qui provoquent l'envoi d'une notification.
+
+Par exemple, une organisation peut décider de transmettre les problèmes de sévérité haute concernant les serveurs Windows à l'équipe d'administration.
+
+Les opérations peuvent inclure l'envoi d'un message, une notification de récupération ou une escalade vers un autre groupe de support.
+
+La procédure consiste à définir les conditions, les destinataires, le canal de notification et le contenu du message.
+
+La configuration SMTP, les webhooks et les notifications automatiques ne sont pas démontrés par les captures actuelles. Ils constituent une étape d'approfondissement.
+
+11. Modèles personnalisés et découverte de bas niveau
+
+11.1 Pourquoi utiliser des modèles ?
+
+Les modèles permettent de standardiser la supervision.
+
+Plutôt que de créer manuellement les mêmes éléments sur chaque serveur, l'administrateur regroupe les éléments, les déclencheurs et les graphiques dans un modèle réutilisable.
+
+Lorsqu'un hôte est associé au modèle, il hérite de sa configuration.
+
+Cette approche facilite la maintenance et la cohérence de la supervision.
+
+11.2 Création d'un modèle personnalisé
+
+Une procédure possible consiste à créer un modèle nommé :
+
+SENUMPRO - Serveur de base
+
+Le modèle peut regrouper les éléments relatifs au processeur, à la mémoire, au stockage, aux interfaces réseau et à la disponibilité de l'agent.
+
+Des macros peuvent être utilisées pour rendre les seuils configurables.
+
+Par exemple :
+
+{$CPU.UTIL.MAX}=90
+{$DISK.FREE.MIN}=10
+
+Les valeurs doivent être adaptées à la politique de supervision de l'organisation.
+
+Après création, le modèle doit être testé sur un hôte avant d'être déployé à plus grande échelle.
+
+11.3 Découverte de bas niveau (LLD)
+
+La découverte de bas niveau permet à Zabbix de détecter automatiquement des ressources internes à un système.
+
+Elle est notamment utilisée pour identifier les systèmes de fichiers et les interfaces réseau.
+
+Une règle LLD peut générer des prototypes d'éléments, de déclencheurs et de graphiques.
+
+Par exemple, la découverte des systèmes de fichiers permet de créer automatiquement des éléments pour les volumes détectés.
+
+Cette fonctionnalité évite de devoir configurer manuellement chaque disque sur chaque hôte.
+
+La création d'un modèle personnalisé et de règles LLD est une procédure d'extension. Elle n'est pas présentée comme une réalisation validée dans le laboratoire actuel.
+
+12. Tableaux de bord et visualisation
+
+12.1 Utilité des tableaux de bord
+
+Les tableaux de bord permettent de regrouper les informations importantes sur un même écran.
+
+Ils peuvent être adaptés aux besoins de l'équipe technique, du support informatique ou de la direction.
+
+Un administrateur peut y afficher les problèmes actifs, les performances des serveurs, les graphiques de ressources et l'état général des hôtes.
+
+12.2 Tableaux de bord du serveur Ubuntu
+
+Dans le laboratoire, les tableaux de bord de l'hôte Zabbix Server ont été consultés.
+
+La vue Filesystems présente l'utilisation des systèmes de fichiers et l'espace disponible.
+
+La vue System performance présente notamment la charge système, l'utilisation du processeur, la mémoire et le swap.
+
+Ces vues permettent d'observer les ressources du serveur sur une période définie et d'analyser leur évolution.
+
+<img width="1910" height="957" alt="04-04-surveillance-espace-disque-linux png" src="https://github.com/user-attachments/assets/1ff62a48-af1e-4f5d-ba11-da8ba63404cc" />
+
+<img width="1919" height="990" alt="04-05-surveillance-cpu-memoire-et-charge-linux png" src="https://github.com/user-attachments/assets/2b7dc275-c7a5-4330-a6a2-df23cf9c0c1d" />
+
+12.3 Organisation recommandée
+
+Dans une infrastructure plus importante, il est utile de créer plusieurs tableaux de bord.
+
+Une vue destinée au support peut présenter les problèmes actifs, les hôtes indisponibles et les principaux indicateurs de performance.
+
+Une vue destinée à la direction peut présenter les indicateurs de disponibilité, les tendances et les incidents majeurs.
+
+Le principe est de privilégier une lecture rapide et de ne pas surcharger les tableaux de bord avec des informations secondaires.
+
+13. Supervision des équipements réseau avec SNMP
+
+13.1 Présentation de SNMP
+
+SNMP est un protocole utilisé pour superviser les équipements réseau et certains équipements spécialisés.
+
+Il permet de récupérer des informations sur les interfaces, le trafic, l'état du matériel, la mémoire et d'autres indicateurs selon les capacités de l'équipement.
+
+Contrairement à un agent installé sur un système d'exploitation, SNMP permet généralement de superviser un équipement réseau sans installer de logiciel supplémentaire sur celui-ci.
+
+13.2 Versions SNMP
+
+SNMPv1 et SNMPv2c utilisent une communauté pour contrôler l'accès. Cette méthode ne fournit pas un niveau de protection suffisant pour un réseau de production exposé.
+
+SNMPv3 apporte des mécanismes d'authentification et de chiffrement. Il est à privilégier lorsque l'équipement le permet.
+
+Les informations d'authentification ne doivent jamais être publiées dans les captures ou les fichiers de configuration partagés.
+
+13.3 Procédure de configuration
+
+La première étape consiste à activer SNMP sur l'équipement concerné et à définir les paramètres d'accès.
+
+Il faut ensuite vérifier que le serveur Zabbix peut joindre l'équipement sur UDP 161.
+
+Des outils comme snmpwalk et snmpget permettent de tester la communication et de consulter les OID disponibles.
+
+Exemple de vérification SNMPv3 :
+
+snmpwalk -v3 -l authPriv \
+-u UTILISATEUR_SNMP \
+-a SHA -A MOT_DE_PASSE_AUTH \
+-x AES -X MOT_DE_PASSE_PRIV \
+ADRESSE_EQUIPEMENT sysDescr
+
+Une fois le test réussi, l'administrateur crée l'hôte dans Zabbix, ajoute une interface SNMP et associe un modèle adapté.
+
+La découverte des interfaces peut ensuite permettre de collecter les compteurs de trafic.
+
+La supervision SNMP n'est pas présentée comme déployée dans le laboratoire documenté. Cette section décrit la procédure à suivre pour une prochaine extension.
+
+14. Maintenance, sauvegarde et exploitation
+
+14.1 Gestion des périodes de maintenance
+
+Les périodes de maintenance permettent de planifier les interventions sans générer inutilement des alertes.
+
+Une maintenance peut être ponctuelle ou récurrente et être associée à un ou plusieurs hôtes.
+
+Il faut définir précisément la période, les systèmes concernés et le comportement souhaité pour la collecte des données.
+
+Avant une intervention, l'administrateur doit vérifier que les hôtes concernés sont correctement associés à la maintenance.
+
+Cette procédure est particulièrement utile lors de l'installation de correctifs, des redémarrages planifiés et des opérations de maintenance matérielle.
+
+14.2 Sauvegarde de Zabbix
+
+La sauvegarde d'une plateforme Zabbix doit prendre en compte la base de données et les fichiers de configuration.
+
+Une sauvegarde de la base seule ne suffit pas toujours à restaurer l'ensemble des personnalisations. Il faut également conserver les configurations du serveur, les fichiers de l'agent, les scripts externes et les modèles personnalisés.
+
+Exemple de sauvegarde de la base MariaDB :
+
+sudo mysqldump \
+--single-transaction \
+--routines \
+--triggers \
+zabbix | gzip > zabbix-database.sql.gz
+
+Exemple de sauvegarde des fichiers de configuration :
+
+sudo tar czf zabbix-config.tar.gz /etc/zabbix
+
+Les archives doivent être stockées dans un emplacement protégé, séparé du système sauvegardé lorsque cela est possible.
+
+14.3 Vérification d'une sauvegarde
+
+Une sauvegarde n'est réellement utile que si sa restauration est possible.
+
+Il est recommandé de réaliser périodiquement un test de restauration dans un environnement isolé.
+
+La procédure doit vérifier l'intégrité de l'archive, la restauration de la base, la récupération des fichiers de configuration et le démarrage des services.
+
+La restauration ne doit jamais être testée directement sur le serveur de production sans plan de retour arrière.
+
+La sauvegarde planifiée et le test de restauration ne sont pas documentés comme réalisés dans ce laboratoire.
+
+14.4 Mise à jour de la plateforme
+
+Avant toute mise à jour, il faut consulter les notes de version, vérifier les dépendances et sauvegarder la base de données.
+
+La mise à jour doit maintenir la cohérence entre le serveur, l'interface Web, les scripts SQL et les agents.
+
+Exemple de mise à jour des paquets installés :
+
+sudo apt update
+
+sudo apt install --only-upgrade \
+zabbix-server-mysql \
+zabbix-frontend-php \
+zabbix-nginx-conf \
+zabbix-sql-scripts \
+zabbix-agent2
+
+Après la mise à jour, il faut vérifier l'état des services et consulter les journaux.
+
+15. Dépannage et méthodes de diagnostic
+
+15.1 Méthode générale
+
+Le dépannage d'une plateforme de supervision doit suivre une démarche structurée.
+
+Il faut commencer par identifier le symptôme, déterminer le composant concerné et vérifier les journaux avant de modifier la configuration.
+
+Une intervention doit être suivie d'un nouveau test afin de confirmer que le problème est réellement résolu.
+
+Cette méthode évite les changements inutiles et permet de conserver une trace des opérations effectuées.
+
+15.2 Vérification des services
+
+Pour consulter l'état des principaux services :
+
+sudo systemctl status zabbix-server
+sudo systemctl status zabbix-agent2
+sudo systemctl status mariadb
+sudo systemctl status nginx
+sudo systemctl status php8.3-fpm
+
+Pour suivre les journaux :
+
+sudo tail -f /var/log/zabbix/zabbix_server.log
+
+Pour consulter les événements systemd :
+
+sudo journalctl -u zabbix-server
+
+Ces commandes permettent de repérer les erreurs de démarrage, les problèmes de connexion à la base et certaines difficultés de communication.
+
+15.3 Diagnostic d'un agent inaccessible
+
+Lorsqu'un hôte apparaît indisponible, il faut vérifier le service agent sur la machine concernée, les paramètres Server et Hostname, ainsi que les règles du pare-feu.
+
+Sur Windows :
+
+Get-Service "Zabbix Agent 2"
+Test-NetConnection ADRESSE_SERVEUR -Port 10051
+
+Sur Linux :
+
+sudo systemctl status zabbix-agent2
+sudo ss -tlnp | grep 10050
+
+Depuis le serveur de supervision :
+
+zabbix_get -s ADRESSE_AGENT -p 10050 -k agent.ping
+
+Le résultat doit être interprété selon le mode de communication configuré.
+
+15.4 Diagnostic de la base de données
+
+Si le serveur Zabbix ne démarre pas correctement, il faut vérifier l'état de MariaDB et les journaux du serveur.
+
+sudo systemctl status mariadb
+sudo journalctl -u mariadb
+sudo tail -n 50 /var/log/zabbix/zabbix_server.log
+
+Une erreur de connexion peut être liée à un mot de passe incorrect, à une base indisponible ou à une saturation des ressources.
+
+Il ne faut pas réimporter le schéma de la base pour corriger une erreur de connexion. Il faut d'abord identifier la cause réelle.
+
+15.5 Diagnostic des éléments non pris en charge
+
+Lorsqu'un élément passe à l'état non pris en charge, il faut ouvrir sa configuration et consulter le message d'erreur fourni par Zabbix.
+
+Les causes possibles comprennent une clé incorrecte, un droit insuffisant, un agent incompatible ou un type d'information mal configuré.
+
+L'administrateur peut ensuite tester la clé directement avec zabbix_get, lorsque le type d'élément le permet.
+
+15.6 Analyse des événements et confirmation du retour à la normale
+
+Lorsqu'un événement est détecté, il faut vérifier les informations disponibles dans Zabbix, puis confronter le résultat à l'état du système concerné.
+
+Dans le cas d'un service Windows, la console Services permet de vérifier son état réel.
+
+Après le diagnostic, il faut revenir dans Zabbix pour vérifier que le problème a été récupéré et que les dernières données sont de nouveau disponibles.
+
+Le laboratoire présente cette démarche avec les événements Windows relatifs à InventorySvc et AppXSvc.
+
+16. Extensions possibles du laboratoire
+
+La plateforme actuelle constitue une base fonctionnelle pour la supervision de systèmes Linux et Windows.
+
+Plusieurs améliorations peuvent être envisagées pour approfondir les compétences d'administration.
+
+Supervision SNMP : intégrer un switch, un routeur ou un pare-feu et collecter les statistiques des interfaces réseau.
+
+Notifications : configurer SMTP et un webhook afin de transmettre automatiquement les événements aux équipes concernées.
+
+Modèles personnalisés : créer des modèles adaptés aux besoins de l'environnement et les réutiliser sur plusieurs hôtes.
+
+Découverte de bas niveau : automatiser la découverte des disques, des interfaces et des services.
+
+Services et SLA : construire une vue métier de la disponibilité et mesurer les engagements de service.
+
+Proxy Zabbix : déployer un collecteur intermédiaire pour superviser un site distant.
+
+Supervision cloud : intégrer des ressources AWS ou Azure avec des comptes en lecture seule.
+
+Sauvegarde et restauration : automatiser les sauvegardes et valider régulièrement leur restauration.
+
+Ces extensions sont des pistes d'évolution. Elles ne font pas partie des fonctionnalités démontrées dans les captures de la version actuelle du laboratoire.
+
+17. Conclusion
+
+Ce projet a permis de déployer une plateforme de supervision Zabbix 7.0 sur Ubuntu Server 24.04 LTS, avec une installation native reposant sur MariaDB, Nginx et PHP-FPM.
+
+L'intégration de Zabbix Agent 2 sur Linux et Windows Server 2025 a permis de centraliser la collecte des données et de suivre les principales ressources des systèmes.
+
+La découverte réseau a également permis d'identifier plusieurs équipements présents dans le laboratoire. Les données collectées ont été consultées à travers les dernières données, les graphiques et les tableaux de bord.
+
+Enfin, les événements détectés sur Windows Server ont été analysés à partir de Zabbix puis vérifiés directement sur le système concerné. Le suivi des événements jusqu'à leur état résolu a permis de mettre en pratique une démarche de diagnostic et d'exploitation.
+
+Au-delà de l'installation, ce laboratoire constitue une démonstration pratique des principes de supervision : collecte, observation, détection, analyse et suivi des incidents.
+
+Il est conçu comme une base de référence que d'autres administrateurs peuvent reprendre, adapter et enrichir selon leur propre infrastructure.
+
+18. Références techniques
+
+La documentation officielle doit rester la référence principale lors de l'installation, de la configuration et de l'évolution de Zabbix.
+
+Site officiel : https://www.zabbix.com/
+
+Documentation Zabbix 7.0 : https://www.zabbix.com/documentation/7.0/en/manual
+
+Téléchargement Zabbix : https://www.zabbix.com/download
+
+Téléchargement des agents : https://www.zabbix.com/download_agents
+
+Dépôt officiel : https://repo.zabbix.com/
+
+Code source et modèles : https://github.com/zabbix/zabbix
+
+Documentation Ubuntu Server : https://documentation.ubuntu.com/server/
