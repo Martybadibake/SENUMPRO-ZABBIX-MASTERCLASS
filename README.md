@@ -221,12 +221,12 @@ Les composants Zabbix nécessaires sont installés à l'aide du gestionnaire de 
 
 sudo apt install -y mariadb-server
 
-sudo apt install -y \
-zabbix-server-mysql \
-zabbix-frontend-php \
-zabbix-nginx-conf \
-zabbix-sql-scripts \
-zabbix-agent2 \
+sudo apt install -y
+zabbix-server-mysql
+zabbix-frontend-php
+zabbix-nginx-conf
+zabbix-sql-scripts
+zabbix-agent2
 php8.3-mysql
 
 Cette installation fournit les services nécessaires au fonctionnement de la plateforme.
@@ -404,17 +404,17 @@ Le pare-feu Windows doit autoriser les connexions entrantes sur le port TCP 1005
 
 Exemple :
 
-New-NetFirewallRule `
+New-NetFirewallRule
 
-DisplayName "Zabbix Agent 10050" `
+DisplayName "Zabbix Agent 10050"
 
-Direction Inbound `
+Direction Inbound
 
-Protocol TCP `
+Protocol TCP
 
-LocalPort 10050 `
+LocalPort 10050
 
-Action Allow `
+Action Allow
 
 RemoteAddress ADRESSE_SERVEUR_ZABBIX
 
@@ -981,10 +981,10 @@ Des outils comme snmpwalk et snmpget permettent de tester la communication et de
 
 Exemple de vérification SNMPv3 :
 
-snmpwalk -v3 -l authPriv \
--u UTILISATEUR_SNMP \
--a SHA -A MOT_DE_PASSE_AUTH \
--x AES -X MOT_DE_PASSE_PRIV \
+snmpwalk -v3 -l authPriv
+-u UTILISATEUR_SNMP
+-a SHA -A MOT_DE_PASSE_AUTH
+-x AES -X MOT_DE_PASSE_PRIV
 ADRESSE_EQUIPEMENT sysDescr
 
 Une fois le test réussi, l'administrateur crée l'hôte dans Zabbix, ajoute une interface SNMP et associe un modèle adapté.
@@ -1015,10 +1015,10 @@ Une sauvegarde de la base seule ne suffit pas toujours à restaurer l'ensemble d
 
 Exemple de sauvegarde de la base MariaDB :
 
-sudo mysqldump \
---single-transaction \
---routines \
---triggers \
+sudo mysqldump
+--single-transaction
+--routines
+--triggers
 zabbix | gzip > zabbix-database.sql.gz
 
 Exemple de sauvegarde des fichiers de configuration :
@@ -1049,11 +1049,11 @@ Exemple de mise à jour des paquets installés :
 
 sudo apt update
 
-sudo apt install --only-upgrade \
-zabbix-server-mysql \
-zabbix-frontend-php \
-zabbix-nginx-conf \
-zabbix-sql-scripts \
+sudo apt install --only-upgrade
+zabbix-server-mysql
+zabbix-frontend-php
+zabbix-nginx-conf
+zabbix-sql-scripts
 zabbix-agent2
 
 Après la mise à jour, il faut vérifier l'état des services et consulter les journaux.
